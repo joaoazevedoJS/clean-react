@@ -7,6 +7,8 @@
     "plugin:react/recommended",
     "airbnb",
     "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -19,6 +21,7 @@
   "plugins": [
     "react",
     "react-hooks",
+    "prettier",
     "@typescript-eslint"
   ],
   "rules": {
@@ -28,12 +31,12 @@
     "camelcase": "off",
     "@typescript-eslint/ban-types": "off",
     "react/prop-types": "off",
+    "prettier/prettier": "error",
     "no-use-before-define": "off",
     "react/jsx-props-no-spreading": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-one-expression-per-line": "off",
     "jsx-a11y/label-has-associated-control": "off",
-    "no-undef": "off",
     "react/jsx-filename-extension": [
       1,
       {
