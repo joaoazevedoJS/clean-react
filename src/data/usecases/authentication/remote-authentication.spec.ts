@@ -1,11 +1,10 @@
 import "reflect-metadata";
-
 import faker from "faker";
 
-import { HttpPostClientSpy } from "../../mock/mock-http-client";
-import { RemoteAuthentication } from "./remote-authentication";
+import { HttpPostClientSpy } from "@/data/mock/mock-http-client";
+import { mockAuthentication } from "@/domain/mock/mock-authentication";
 
-import { mockAuthentication } from "../../../domain/mock/mock-authentication";
+import { RemoteAuthentication } from "./remote-authentication";
 
 type SutTypes = {
   sut: RemoteAuthentication;
