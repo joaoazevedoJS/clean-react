@@ -4,7 +4,7 @@
   "description": "ReactJS, Hooks, Recoil, TDD, Clean Architecture, SOLID",
   "main": "index.js",
   "scripts": {
-    "test": "jest --passWithNoTests",
+    "test": "jest --clearCache && jest --passWithNoTests",
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
