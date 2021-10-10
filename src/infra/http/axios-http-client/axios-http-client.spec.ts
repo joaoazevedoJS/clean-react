@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import axios from "axios";
 
 import { mockAxios } from "@/infra/mock";

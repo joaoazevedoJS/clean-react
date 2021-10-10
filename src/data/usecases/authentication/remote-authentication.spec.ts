@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import faker from "faker";
 
 import { HttpPostClientSpy } from "@/data/mock";
