@@ -26,22 +26,25 @@
   ],
   "rules": {
     "no-shadow": "off",
-    "@typescript-eslint/no-shadow": ["error"],
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
-    "import/prefer-default-export": "off",
     "camelcase": "off",
-    "@typescript-eslint/ban-types": "off",
-    "react/prop-types": "off",
     "prettier/prettier": "error",
     "no-use-before-define": "off",
-    "import/no-extraneous-dependencies": "off",
-    "react/jsx-props-no-spreading": "off",
-    "react/react-in-jsx-scope": "off",
-    "react/jsx-one-expression-per-line": "off",
-    "jsx-a11y/label-has-associated-control": "off",
     "class-methods-use-this": "off",
     "no-useless-constructor": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+
+    "@typescript-eslint/ban-types": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+
+    "import/no-extraneous-dependencies": "off",
+    "import/prefer-default-export": "off",
+
+    "react/prop-types": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "react/jsx-filename-extension": [
       1,
       {
