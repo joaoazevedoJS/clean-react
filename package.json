@@ -4,7 +4,8 @@
   "description": "ReactJS, Hooks, Recoil, TDD, Clean Architecture, SOLID",
   "main": "index.js",
   "scripts": {
-    "test": "jest --clearCache && jest --passWithNoTests",
+    "start": "webpack-dev-server --open",
+    "test": "jest --clearCache && jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
@@ -29,6 +30,7 @@
     "@types/react-dom": "^17.0.9",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.2",
+    "clean-webpack-plugin": "^4.0.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^7.2.0",
