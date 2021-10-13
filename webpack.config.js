@@ -2,9 +2,14 @@
 
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+
+const isDevelopment = process.env.NODE_ENV !== "production";
 
 module.exports = {
-  node: "development",
+  mode: isDevelopment ? "development" : "production",
+  devtool: isDevelopment ? "eval-source-map" : "source-map",
   entry: "./src/main/index.tsx",
   output: {
     path: path.resolve(__dirname, "public", "js"),
@@ -20,9 +25,16 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts(x?)$/,
-        loader: "ts-loader",
+        test: /\.(j|t)sx$/,
         exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            plugins: [
+              isDevelopment && require.resolve("react-refresh/babel"),
+            ].filter(Boolean),
+          },
+        },
       },
       {
         test: /\.scss$/,
@@ -42,17 +54,40 @@ module.exports = {
         ],
         exclude: /node_modules/,
       },
+      {
+        test: /\.(jpe?g|gif|png|svg)$/i,
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 10000,
+            },
+          },
+        ],
+        exclude: /node_modules/,
+      },
     ],
   },
   devServer: {
+    devMiddleware: {
+      writeToDisk: true,
+    },
+    static: {
+      directory: path.resolve(__dirname, "public"),
+      watch: true,
+    },
     port: 3000,
-    contentBase: path.resolve(__dirname, "public"),
-    writeToDisk: true,
+    hot: true,
     historyApiFallback: true,
   },
-  externals: {
-    react: "React", // Não vai incluir o react no bundle.
-    "react-dom": "ReactDom",
+  watchOptions: {
+    ignored: /node_modules/,
   },
-  plugins: [new CleanWebpackPlugin()],
+  plugins: [
+    new CleanWebpackPlugin(),
+    isDevelopment && new ReactRefreshWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "public", "index.html"),
+    }),
+  ].filter(Boolean),
 };
