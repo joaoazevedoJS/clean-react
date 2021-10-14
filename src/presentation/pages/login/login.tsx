@@ -1,16 +1,15 @@
 import React, { FC } from "react";
 
-import Styles from "./login-styles.module.scss";
-
 import Spinner from "@/presentation/components/spinner/spinner";
+import Logo from "@/presentation/components/logo/logo";
 
-import Logo from "../../images/logo.svg";
+import Styles from "./login-styles.module.scss";
 
 const Login: FC = () => {
   return (
     <div className={Styles.login}>
       <header className={Styles.header}>
-        <img src={Logo} alt="for devs" title="for devs" />
+        <Logo />
 
         <h1>Enquestes Para Programadores</h1>
       </header>
