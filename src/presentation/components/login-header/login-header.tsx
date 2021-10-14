@@ -1,6 +1,6 @@
 import React, { FC, memo } from "react";
 
-import Logo from "@/presentation/components/logo/logo";
+import { Logo } from "@/presentation/components";
 
 import Styles from "./login-header-styles.module.scss";
 
