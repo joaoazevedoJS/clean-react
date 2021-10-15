@@ -1,0 +1,17 @@
+@import './colors.scss';
+
+* {
+  font-family: 'Roboto', sans-serif;
+  font-size: .875rem;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: $background;
+}
+
+button {
+  cursor: pointer;
+}
