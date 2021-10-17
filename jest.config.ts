@@ -17,4 +17,5 @@ export default {
     "@/(.*)": "<rootDir>/src/$1",
     "\\.(css|scss)$": "identity-obj-proxy",
   },
+  setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect"],
 };
