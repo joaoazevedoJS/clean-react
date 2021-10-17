@@ -10,10 +10,19 @@ const FormStatus: FC = () => {
   const { isLoading, errorMessage } = useFormContext();
 
   return (
-    <div data-testid="error-wrap" className={Styles.errorWrap}>
+    <div
+      aria-label="error wrap"
+      role="contentinfo"
+      className={Styles.errorWrap}
+      aria-busy={isLoading}
+    >
       {isLoading && <Spinner className={Styles.spinner} />}
 
-      {errorMessage && <span className={Styles.error}>{errorMessage}</span>}
+      {errorMessage && (
+        <span role="alert" aria-label="error message" className={Styles.error}>
+          {errorMessage}
+        </span>
+      )}
     </div>
   );
 };
