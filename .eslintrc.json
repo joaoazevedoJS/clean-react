@@ -8,7 +8,8 @@
     "prettier/@typescript-eslint",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:testing-library/react"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -22,7 +23,14 @@
     "react",
     "react-hooks",
     "prettier",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "testing-library"
+  ],
+  "overrides": [
+    {
+      "files": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+      "extends": ["plugin:testing-library/react"]
+    }
   ],
   "rules": {
     "no-shadow": "off",
@@ -38,6 +46,11 @@
 
     "import/no-extraneous-dependencies": "off",
     "import/prefer-default-export": "off",
+
+    "testing-library/await-async-query": "error",
+    "testing-library/no-await-sync-query": "error",
+    "testing-library/no-debug": "warn",
+    "testing-library/no-dom-import": "off",
 
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
