@@ -9,13 +9,13 @@ import {
 
 import {
   FormContext,
-  StateProps,
+  FormContextProps,
 } from "@/presentation/contexts/form/form-context";
 
 import Styles from "./login-styles.module.scss";
 
 const Login: FC = () => {
-  const [state] = useState<StateProps>({
+  const [state] = useState<FormContextProps>({
     isLoading: false,
     errorMessage: "",
   });
