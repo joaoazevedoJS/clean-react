@@ -36,7 +36,7 @@ const Login: FC = () => {
             placeholder="Digite sua senha"
           />
 
-          <button className={Styles.submit} type="submit">
+          <button disabled className={Styles.submit} type="submit">
             Entrar
           </button>
 
