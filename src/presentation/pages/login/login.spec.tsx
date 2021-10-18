@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 import Login from "./login";
 
 describe("Login component", () => {
-  test("Should not render spinner and error on start", () => {
+  it("Should render form status empty on start ", () => {
     render(<Login />);
 
     const errorWrap = screen.getByRole("contentinfo", {
@@ -12,5 +12,15 @@ describe("Login component", () => {
     });
 
     expect(errorWrap.childElementCount).toBe(0);
+  });
+
+  it("Should start login with button disabled", () => {
+    render(<Login />);
+
+    const submitButton = screen.getByRole("button", {
+      name: /entrar/i,
+    });
+
+    expect(submitButton).toBeDisabled();
   });
 });
