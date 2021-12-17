@@ -2,14 +2,21 @@ import React, { FC, InputHTMLAttributes } from "react";
 
 import Styles from "./input-styles.module.scss";
 
-type Props = InputHTMLAttributes<HTMLInputElement>;
+type Props = InputHTMLAttributes<HTMLInputElement> & {
+  errorMessage?: string;
+};
 
-const Input: FC<Props> = (props) => {
+const Input: FC<Props> = ({ errorMessage, ...rest }) => {
   return (
     <div className={Styles.inputWrap}>
-      <input {...props} />
+      <input {...rest} />
 
-      <span className={Styles.status} />
+      <div
+        role="status"
+        title={errorMessage || "ok"}
+        aria-label="input status"
+        className={`${Styles.status} ${errorMessage ? Styles.statusError : ""}`}
+      />
     </div>
   );
 };
