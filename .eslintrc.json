@@ -60,6 +60,7 @@
     "react/jsx-props-no-spreading": "off",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
+    "react/require-default-props": "off",
     "react/jsx-filename-extension": [
       1,
       {
