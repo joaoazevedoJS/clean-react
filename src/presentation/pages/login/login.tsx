@@ -20,6 +20,11 @@ const Login: FC = () => {
     errorMessage: "",
   });
 
+  const [errorStatusForm] = useState({
+    email: "Campo obrigatório",
+    password: "Campo obrigatório",
+  });
+
   return (
     <div className={Styles.login}>
       <FormContext.Provider value={state}>
@@ -28,12 +33,18 @@ const Login: FC = () => {
         <form className={Styles.form}>
           <h2>Login</h2>
 
-          <Input type="email" name="email" placeholder="Digite seu e-mail" />
+          <Input
+            type="email"
+            name="email"
+            placeholder="Digite seu e-mail"
+            errorMessage={errorStatusForm.email}
+          />
 
           <Input
             type="password"
             name="password"
             placeholder="Digite sua senha"
+            errorMessage={errorStatusForm.password}
           />
 
           <button disabled className={Styles.submit} type="submit">
