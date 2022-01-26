@@ -45,6 +45,7 @@ const Login: FC = () => {
             name="password"
             placeholder="Digite sua senha"
             errorMessage={errorStatusForm.password}
+            onChange={(e) => console.log(e)}
           />
 
           <button disabled className={Styles.submit} type="submit">
