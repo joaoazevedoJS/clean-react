@@ -1,6 +1,8 @@
 import React from "react";
 
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+
+import userEvent from "@testing-library/user-event";
 
 import Input from "./input";
 
@@ -58,7 +60,7 @@ describe("Input component", () => {
 
     const { inputElement } = makeSut();
 
-    fireEvent.change(inputElement, { target: { value: "john@mail.com" } });
+    userEvent.type(inputElement, "john@mail.com");
 
     expect(setValue).toBeCalledWith("john@mail.com");
   });
@@ -70,7 +72,7 @@ describe("Input component", () => {
 
     const { inputElement } = makeSut();
 
-    fireEvent.change(inputElement, { target: { value: "john@mail.com" } });
+    userEvent.type(inputElement, "john@mail.com");
 
     expect(setValue).not.toBeCalledWith("john@mail.com");
   });
