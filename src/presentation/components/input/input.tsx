@@ -3,7 +3,6 @@ import React, {
   FC,
   InputHTMLAttributes,
   useCallback,
-  useEffect,
   useState,
 } from "react";
 
@@ -14,22 +13,36 @@ type InputStringAttributes = Omit<
   "value" | "onChange"
 >;
 
+export type InputOnChangeEvent = {
+  fieldName: string;
+  value: string;
+  element: HTMLInputElement;
+};
+
 type Props = InputStringAttributes & {
   errorMessage?: string;
   value?: string;
-  onChange?: (value: string) => void;
+  name: string;
+  onChange?: (props: InputOnChangeEvent) => void;
 };
 
-const Input: FC<Props> = ({ errorMessage, onChange, value, ...rest }) => {
+const Input: FC<Props> = ({ errorMessage, onChange, name, value, ...rest }) => {
   const [inputValue, setInputValue] = useState(value || "");
 
-  const handleUpdateInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  }, []);
+  const handleUpdateInput = useCallback(
+    (element: ChangeEvent<HTMLInputElement>) => {
+      setInputValue(element.target.value);
 
-  useEffect(() => {
-    if (onChange) onChange(inputValue || "");
-  }, [onChange, inputValue]);
+      if (onChange) {
+        onChange({
+          fieldName: name,
+          value: element.target.value,
+          element: element.target,
+        });
+      }
+    },
+    [onChange, name]
+  );
 
   return (
     <div className={Styles.inputWrap}>
@@ -38,7 +51,6 @@ const Input: FC<Props> = ({ errorMessage, onChange, value, ...rest }) => {
         value={inputValue}
         onChange={handleUpdateInput}
         className={errorMessage ? Styles.statusError : ""}
-        aria-label="textbox input"
       />
 
       <div
