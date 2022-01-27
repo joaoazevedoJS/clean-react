@@ -20,7 +20,9 @@ const makeSut = () => {
 
 describe("Input component", () => {
   it("Should be able to render status error if has errorMessage", () => {
-    render(<Input errorMessage="required" />);
+    render(
+      <Input name="email" aria-label="textbox input" errorMessage="required" />
+    );
 
     const { inputElement, inputStatus } = makeSut();
 
@@ -29,7 +31,7 @@ describe("Input component", () => {
   });
 
   it("Should not be able to render status error if non existing errorMessage", () => {
-    render(<Input />);
+    render(<Input name="email" aria-label="textbox input" />);
 
     const { inputElement, inputStatus } = makeSut();
 
@@ -38,7 +40,9 @@ describe("Input component", () => {
   });
 
   it("Should be able to initialize with value if pass value parameter", () => {
-    render(<Input value="john@mail.com" />);
+    render(
+      <Input name="email" aria-label="textbox input" value="john@mail.com" />
+    );
 
     const { inputElement } = makeSut();
 
@@ -46,7 +50,7 @@ describe("Input component", () => {
   });
 
   it("Should not be able to initialize with value if no pass value parameter", () => {
-    render(<Input />);
+    render(<Input name="email" aria-label="textbox input" />);
 
     const { inputElement } = makeSut();
 
@@ -56,24 +60,34 @@ describe("Input component", () => {
   it("Should be able return text when use onChange", () => {
     const setValue = jest.fn();
 
-    render(<Input onChange={setValue} />);
+    render(
+      <Input name="email" aria-label="textbox input" onChange={setValue} />
+    );
 
     const { inputElement } = makeSut();
 
     userEvent.type(inputElement, "john@mail.com");
 
-    expect(setValue).toBeCalledWith("john@mail.com");
+    expect(setValue).toBeCalledWith({
+      fieldName: "email",
+      value: "john@mail.com",
+      element: inputElement,
+    });
   });
 
   it("Should not be able return text when use onChange", () => {
     const setValue = jest.fn();
 
-    render(<Input />);
+    render(<Input name="email" aria-label="textbox input" />);
 
     const { inputElement } = makeSut();
 
     userEvent.type(inputElement, "john@mail.com");
 
-    expect(setValue).not.toBeCalledWith("john@mail.com");
+    expect(setValue).not.toBeCalledWith({
+      fieldName: "email",
+      value: "john@mail.com",
+      element: inputElement,
+    });
   });
 });
