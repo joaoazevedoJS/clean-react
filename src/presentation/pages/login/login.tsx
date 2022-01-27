@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 
 import {
   Footer,
@@ -12,18 +12,48 @@ import {
   FormContextProps,
 } from "@/presentation/contexts/form/form-context";
 
-import Styles from "./login-styles.module.scss";
+import { Validation } from "@/presentation/protocols/validation";
 
-const Login: FC = () => {
+import Styles from "./login-styles.module.scss";
+import { InputOnChangeEvent } from "@/presentation/components/input/input";
+
+type Props = {
+  validation: Validation;
+};
+
+type ErrorStatusProps = {
+  email: string;
+  password: string;
+};
+
+const Login: FC<Props> = ({ validation }) => {
   const [state] = useState<FormContextProps>({
     isLoading: false,
     errorMessage: "",
   });
 
-  const [errorStatusForm] = useState({
+  const [errorStatusForm, setErrorStatusForm] = useState<ErrorStatusProps>({
     email: "Campo obrigatório",
     password: "Campo obrigatório",
   });
+
+  const handleUpdateErrorStatus = useCallback(
+    ({ fieldName, value }: InputOnChangeEvent) => {
+      setErrorStatusForm({
+        ...errorStatusForm,
+        [fieldName]: value,
+      });
+    },
+    [errorStatusForm]
+  );
+
+  useEffect(() => {
+    validation.validate({ email: errorStatusForm.email });
+  }, [errorStatusForm.email, validation]);
+
+  useEffect(() => {
+    validation.validate({ password: errorStatusForm.password });
+  }, [errorStatusForm.password, validation]);
 
   return (
     <div className={Styles.login}>
@@ -38,6 +68,8 @@ const Login: FC = () => {
             name="email"
             placeholder="Digite seu e-mail"
             errorMessage={errorStatusForm.email}
+            onChange={handleUpdateErrorStatus}
+            data-testid="email"
           />
 
           <Input
@@ -45,7 +77,8 @@ const Login: FC = () => {
             name="password"
             placeholder="Digite sua senha"
             errorMessage={errorStatusForm.password}
-            onChange={(e) => console.log(e)}
+            onChange={handleUpdateErrorStatus}
+            data-testid="password"
           />
 
           <button disabled className={Styles.submit} type="submit">
