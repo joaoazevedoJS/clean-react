@@ -95,4 +95,22 @@ describe("Login component", () => {
     expect(emailStatusElement.title).toBe(errorMessage);
     expect(emailStatusElement.classList).toContain("statusError");
   });
+
+  it("Should show password message error if Validation fails", () => {
+    const { validationSpy } = makeSut();
+
+    const errorMessage = faker.random.words();
+
+    validationSpy.errorMessage = errorMessage;
+
+    render(<Login validation={validationSpy} />);
+
+    const passwordElement = screen.getByTestId("password");
+    const passwordStatusElement = screen.getByTestId("password-status");
+
+    userEvent.type(passwordElement, faker.internet.password());
+
+    expect(passwordStatusElement.title).toBe(errorMessage);
+    expect(passwordStatusElement.classList).toContain("statusError");
+  });
 });
