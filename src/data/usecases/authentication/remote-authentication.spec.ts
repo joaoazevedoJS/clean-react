@@ -1,4 +1,4 @@
-import faker from "faker";
+import faker from "@faker-js/faker";
 
 import { HttpPostClientSpy } from "@/data/mock";
 import { HttpStatusCode } from "@/data/protocols/http";

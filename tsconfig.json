@@ -9,6 +9,7 @@
     "allowJs": true,
     "esModuleInterop": true,
     "strict": true,
+    "strictNullChecks":false,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "rootDir": "src",

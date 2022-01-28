@@ -3,6 +3,8 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+import faker from "@faker-js/faker";
+
 import { ValidationSpy } from "@/presentation/test";
 
 import Login from "./login";
@@ -51,10 +53,12 @@ describe("Login component", () => {
 
     const emailElement = screen.getByTestId("email");
 
-    userEvent.type(emailElement, "john@mail.com");
+    const email = faker.internet.email();
+
+    userEvent.type(emailElement, email);
 
     expect(validationSpy.fieldName).toBe("email");
-    expect(validationSpy.fieldValue).toBe("john@mail.com");
+    expect(validationSpy.fieldValue).toBe(email);
   });
 
   it("Should call Validation with correct password", () => {
@@ -64,9 +68,11 @@ describe("Login component", () => {
 
     const passwordElement = screen.getByTestId("password");
 
-    userEvent.type(passwordElement, "@A12345678");
+    const password = faker.internet.password();
+
+    userEvent.type(passwordElement, password);
 
     expect(validationSpy.fieldName).toBe("password");
-    expect(validationSpy.fieldValue).toBe("@A12345678");
+    expect(validationSpy.fieldValue).toBe(password);
   });
 });
