@@ -56,7 +56,7 @@ const Input: FC<Props> = ({ errorMessage, onChange, name, value, ...rest }) => {
 
       <div
         role="status"
-        title={errorMessage ? String(errorMessage) : "ok"}
+        title={errorMessage || "ok"}
         aria-label="status input"
         className={`${Styles.status} ${errorMessage ? Styles.statusError : ""}`}
         {...(rest["data-testid"]

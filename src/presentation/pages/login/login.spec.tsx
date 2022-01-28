@@ -16,8 +16,6 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy();
 
-  validationSpy.errorMessage = faker.random.words();
-
   return {
     validationSpy,
   };
@@ -112,5 +110,33 @@ describe("Login component", () => {
 
     expect(passwordStatusElement.title).toBe(errorMessage);
     expect(passwordStatusElement.classList).toContain("statusError");
+  });
+
+  it("Should not show email message error if Validation is valid", () => {
+    const { validationSpy } = makeSut();
+
+    render(<Login validation={validationSpy} />);
+
+    const emailElement = screen.getByTestId("email");
+    const emailStatusElement = screen.getByTestId("email-status");
+
+    userEvent.type(emailElement, faker.internet.email());
+
+    expect(emailStatusElement.title).not.toBe(faker.random.words());
+    expect(emailStatusElement.classList).not.toContain("statusError");
+  });
+
+  it("Should not show password message error if Validation is valid", () => {
+    const { validationSpy } = makeSut();
+
+    render(<Login validation={validationSpy} />);
+
+    const passwordElement = screen.getByTestId("password");
+    const passwordStatusElement = screen.getByTestId("password-status");
+
+    userEvent.type(passwordElement, faker.internet.password());
+
+    expect(passwordStatusElement.title).not.toBe(faker.random.words());
+    expect(passwordStatusElement.classList).not.toContain("statusError");
   });
 });
