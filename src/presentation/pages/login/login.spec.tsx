@@ -16,6 +16,8 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy();
 
+  validationSpy.errorMessage = faker.random.words();
+
   return {
     validationSpy,
   };
@@ -74,5 +76,23 @@ describe("Login component", () => {
 
     expect(validationSpy.fieldName).toBe("password");
     expect(validationSpy.fieldValue).toBe(password);
+  });
+
+  it("Should show email message error if Validation fails", () => {
+    const { validationSpy } = makeSut();
+
+    const errorMessage = faker.random.words();
+
+    validationSpy.errorMessage = errorMessage;
+
+    render(<Login validation={validationSpy} />);
+
+    const emailElement = screen.getByTestId("email");
+    const emailStatusElement = screen.getByTestId("email-status");
+
+    userEvent.type(emailElement, faker.internet.email());
+
+    expect(emailStatusElement.title).toBe(errorMessage);
+    expect(emailStatusElement.classList).toContain("statusError");
   });
 });

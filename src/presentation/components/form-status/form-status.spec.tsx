@@ -20,6 +20,8 @@ function useFormContextMocked({
   contextMocked.mockReturnValueOnce({
     isLoading: !!isLoading,
     errorMessage: errorMessage || "",
+    email: "",
+    password: "",
   });
 }
 

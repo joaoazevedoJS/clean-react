@@ -5,7 +5,7 @@ export class ValidationSpy implements Validation {
 
   public fieldValue?: string;
 
-  private errorMessage?: string;
+  public errorMessage?: string;
 
   validate({ fieldName, fieldValue }: ValidateProps): string | undefined {
     this.fieldName = fieldName;

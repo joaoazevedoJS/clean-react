@@ -3,6 +3,8 @@ import { createContext, useContext } from "react";
 export type FormContextProps = {
   isLoading: boolean;
   errorMessage: string;
+  email: string;
+  password: string;
 };
 
 export type FormContextPropsMocked = {

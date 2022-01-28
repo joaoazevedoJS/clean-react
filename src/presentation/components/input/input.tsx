@@ -24,6 +24,7 @@ type Props = InputStringAttributes & {
   value?: string;
   name: string;
   onChange?: (props: InputOnChangeEvent) => void;
+  ["data-testid"]?: string;
 };
 
 const Input: FC<Props> = ({ errorMessage, onChange, name, value, ...rest }) => {
@@ -58,6 +59,9 @@ const Input: FC<Props> = ({ errorMessage, onChange, name, value, ...rest }) => {
         title={errorMessage ? String(errorMessage) : "ok"}
         aria-label="status input"
         className={`${Styles.status} ${errorMessage ? Styles.statusError : ""}`}
+        {...(rest["data-testid"]
+          ? { "data-testid": `${rest["data-testid"]}-status` }
+          : {})}
       />
     </div>
   );

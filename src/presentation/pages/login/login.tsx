@@ -27,39 +27,35 @@ type ErrorStatusProps = {
 };
 
 const Login: FC<Props> = ({ validation }) => {
-  const [state] = useState<FormContextProps>({
+  const [state, setState] = useState<FormContextProps>({
     isLoading: false,
     errorMessage: "",
+    email: "",
+    password: "",
   });
 
   const [errorStatusForm, setErrorStatusForm] = useState<ErrorStatusProps>({
-    email: "Campo obrigatório",
-    password: "Campo obrigatório",
+    email: "",
+    password: "",
   });
 
-  const handleUpdateErrorStatus = useCallback(
+  const handleUpdateInput = useCallback(
     ({ fieldName, value }: InputOnChangeEvent) => {
-      setErrorStatusForm({
-        ...errorStatusForm,
+      setState({
+        ...state,
         [fieldName]: value,
       });
+
+      setErrorStatusForm({
+        ...errorStatusForm,
+        [fieldName]: validation.validate({
+          fieldName,
+          fieldValue: value,
+        }),
+      });
     },
-    [errorStatusForm]
+    [errorStatusForm, state, validation]
   );
-
-  useEffect(() => {
-    validation.validate({
-      fieldName: "email",
-      fieldValue: errorStatusForm.email,
-    });
-  }, [errorStatusForm.email, validation]);
-
-  useEffect(() => {
-    validation.validate({
-      fieldName: "password",
-      fieldValue: errorStatusForm.password,
-    });
-  }, [errorStatusForm.password, validation]);
 
   return (
     <div className={Styles.login}>
@@ -74,7 +70,7 @@ const Login: FC<Props> = ({ validation }) => {
             name="email"
             placeholder="Digite seu e-mail"
             errorMessage={errorStatusForm.email}
-            onChange={handleUpdateErrorStatus}
+            onChange={handleUpdateInput}
             data-testid="email"
           />
 
@@ -83,7 +79,7 @@ const Login: FC<Props> = ({ validation }) => {
             name="password"
             placeholder="Digite sua senha"
             errorMessage={errorStatusForm.password}
-            onChange={handleUpdateErrorStatus}
+            onChange={handleUpdateInput}
             data-testid="password"
           />
 
