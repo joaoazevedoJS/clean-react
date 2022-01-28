@@ -3,28 +3,13 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import Login from "./login";
+import { ValidationSpy } from "@/presentation/test";
 
-import { ValidateProps, Validation } from "@/presentation/protocols/validation";
+import Login from "./login";
 
 type SutTypes = {
   validationSpy: ValidationSpy;
 };
-
-class ValidationSpy implements Validation {
-  public fieldName?: string;
-
-  public fieldValue?: string;
-
-  private errorMessage?: string;
-
-  validate({ fieldName, fieldValue }: ValidateProps): string | undefined {
-    this.fieldName = fieldName;
-    this.fieldValue = fieldValue;
-
-    return this.errorMessage;
-  }
-}
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy();
