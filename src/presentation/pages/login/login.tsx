@@ -48,11 +48,17 @@ const Login: FC<Props> = ({ validation }) => {
   );
 
   useEffect(() => {
-    validation.validate({ email: errorStatusForm.email });
+    validation.validate({
+      fieldName: "email",
+      fieldValue: errorStatusForm.email,
+    });
   }, [errorStatusForm.email, validation]);
 
   useEffect(() => {
-    validation.validate({ password: errorStatusForm.password });
+    validation.validate({
+      fieldName: "password",
+      fieldValue: errorStatusForm.password,
+    });
   }, [errorStatusForm.password, validation]);
 
   return (

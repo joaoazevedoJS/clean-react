@@ -1,3 +1,7 @@
+export type ValidateProps = {
+  fieldName: string;
+  fieldValue: string;
+};
 export interface Validation {
-  validate(input: object): string | undefined;
+  validate(props: ValidateProps): string | undefined;
 }

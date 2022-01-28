@@ -5,19 +5,22 @@ import userEvent from "@testing-library/user-event";
 
 import Login from "./login";
 
-import { Validation } from "@/presentation/protocols/validation";
+import { ValidateProps, Validation } from "@/presentation/protocols/validation";
 
 type SutTypes = {
   validationSpy: ValidationSpy;
 };
 
 class ValidationSpy implements Validation {
-  public input?: object;
+  public fieldName?: string;
+
+  public fieldValue?: string;
 
   private errorMessage?: string;
 
-  validate(input: object): string | undefined {
-    this.input = input;
+  validate({ fieldName, fieldValue }: ValidateProps): string | undefined {
+    this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
 
     return this.errorMessage;
   }
@@ -65,9 +68,8 @@ describe("Login component", () => {
 
     userEvent.type(emailElement, "john@mail.com");
 
-    expect(validationSpy.input).toEqual({
-      email: "john@mail.com",
-    });
+    expect(validationSpy.fieldName).toBe("email");
+    expect(validationSpy.fieldValue).toBe("john@mail.com");
   });
 
   it("Should call Validation with correct password", () => {
@@ -79,8 +81,7 @@ describe("Login component", () => {
 
     userEvent.type(passwordElement, "@A12345678");
 
-    expect(validationSpy.input).toEqual({
-      password: "@A12345678",
-    });
+    expect(validationSpy.fieldName).toBe("password");
+    expect(validationSpy.fieldValue).toBe("@A12345678");
   });
 });
