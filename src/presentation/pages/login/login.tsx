@@ -41,20 +41,20 @@ const Login: FC<Props> = ({ validation }) => {
 
   const handleUpdateInput = useCallback(
     ({ fieldName, value }: InputOnChangeEvent) => {
-      setState({
-        ...state,
+      setState((oldState) => ({
+        ...oldState,
         [fieldName]: value,
-      });
+      }));
 
-      setErrorStatusForm({
-        ...errorStatusForm,
+      setErrorStatusForm((oldState) => ({
+        ...oldState,
         [fieldName]: validation.validate({
           fieldName,
           fieldValue: value,
         }),
-      });
+      }));
     },
-    [errorStatusForm, state, validation]
+    [validation]
   );
 
   return (
