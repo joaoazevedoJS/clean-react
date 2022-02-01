@@ -37,6 +37,8 @@ describe("Login component", () => {
   it("Should start login with button disabled", () => {
     const { validationSpy } = makeSut();
 
+    validationSpy.errorMessage = faker.random.words();
+
     render(<Login validation={validationSpy} />);
 
     const submitButton = screen.getByRole("button", {
@@ -138,5 +140,23 @@ describe("Login component", () => {
 
     expect(passwordStatusElement.title).not.toBe(faker.random.words());
     expect(passwordStatusElement.classList).not.toContain("statusError");
+  });
+
+  it("Should enable submit button if form is valid", () => {
+    const { validationSpy } = makeSut();
+
+    render(<Login validation={validationSpy} />);
+
+    const emailElement = screen.getByTestId("email");
+    const passwordElement = screen.getByTestId("password");
+
+    const submitButton = screen.getByRole("button", {
+      name: /entrar/i,
+    });
+
+    userEvent.type(passwordElement, faker.internet.password());
+    userEvent.type(emailElement, faker.internet.email());
+
+    expect(submitButton).not.toBeDisabled();
   });
 });
