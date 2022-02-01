@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   Footer,
@@ -35,9 +35,17 @@ const Login: FC<Props> = ({ validation }) => {
   });
 
   const [errorStatusForm, setErrorStatusForm] = useState<ErrorStatusProps>({
-    email: "",
-    password: "",
+    email: validation.validate({ fieldName: "email", fieldValue: "" }),
+    password: validation.validate({ fieldName: "password", fieldValue: "" }),
   });
+
+  const hasErrorInForm = useMemo(() => {
+    return Object.values(errorStatusForm).reduce((acc, value) => {
+      if (!value) return acc;
+
+      return acc || String(value).trim().length > 0;
+    }, false);
+  }, [errorStatusForm]);
 
   const handleUpdateInput = useCallback(
     ({ fieldName, value }: InputOnChangeEvent) => {
@@ -77,7 +85,11 @@ const Login: FC<Props> = ({ validation }) => {
             data-testid="password"
           />
 
-          <button disabled className={Styles.submit} type="submit">
+          <button
+            disabled={hasErrorInForm}
+            className={Styles.submit}
+            type="submit"
+          >
             Entrar
           </button>
 
