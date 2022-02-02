@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, { FC, FormEvent, useCallback, useMemo, useState } from "react";
 
 import {
   Footer,
@@ -59,12 +59,23 @@ const Login: FC<Props> = ({ validation }) => {
     [validation]
   );
 
+  const handleSubmit = useCallback(
+    (event: FormEvent) => {
+      event.preventDefault();
+
+      if (hasErrorInForm) return;
+
+      setState((oldState) => ({ ...oldState, isLoading: true }));
+    },
+    [hasErrorInForm]
+  );
+
   return (
     <div className={Styles.login}>
       <FormContext.Provider value={state}>
         <LoginHeader />
 
-        <form className={Styles.form}>
+        <form className={Styles.form} onSubmit={handleSubmit}>
           <h2>Login</h2>
 
           <Input
