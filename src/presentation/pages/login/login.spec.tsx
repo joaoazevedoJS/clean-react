@@ -159,4 +159,27 @@ describe("Login component", () => {
 
     expect(submitButton).not.toBeDisabled();
   });
+
+  it("Should show spinner on submit", () => {
+    const { validationSpy } = makeSut();
+
+    render(<Login validation={validationSpy} />);
+
+    const emailElement = screen.getByTestId("email");
+    const passwordElement = screen.getByTestId("password");
+
+    const submitButton = screen.getByRole("button", {
+      name: /entrar/i,
+    });
+
+    userEvent.type(passwordElement, faker.internet.password());
+    userEvent.type(emailElement, faker.internet.email());
+    userEvent.click(submitButton);
+
+    const spinner = screen.queryByRole("status", {
+      name: /spinner loading/i,
+    });
+
+    expect(spinner).toBeInTheDocument();
+  });
 });
