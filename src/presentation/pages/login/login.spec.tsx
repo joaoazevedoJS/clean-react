@@ -1,127 +1,101 @@
 import React from "react";
-
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import faker from "@faker-js/faker";
 
 import { ValidationSpy } from "@/presentation/test";
+import { Authentication, AuthenticationParams } from "@/domain/usecases";
+import { AccountModel } from "@/domain/models";
+import { mockAccountModel } from "@/domain/mock";
 
 import Login from "./login";
 
+class AuthenticationSpy implements Authentication {
+  private account = mockAccountModel();
+
+  public params: AuthenticationParams;
+
+  async auth(params: AuthenticationParams): Promise<AccountModel> {
+    this.params = params;
+
+    return Promise.resolve(this.account);
+  }
+}
+
 type SutTypes = {
   validationSpy: ValidationSpy;
+  authenticationSpy: AuthenticationSpy;
 };
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy();
+  const authenticationSpy = new AuthenticationSpy();
 
   return {
     validationSpy,
+    authenticationSpy,
   };
 };
 
 describe("Login component", () => {
+  let validation: ValidationSpy;
+  let authentication: AuthenticationSpy;
+
+  let errorWrap: HTMLElement;
+  let submitButton: HTMLElement;
+  let spinner: HTMLElement;
+
+  let emailElement: HTMLInputElement;
+  let emailStatusElement: HTMLElement;
+
+  let passwordElement: HTMLInputElement;
+  let passwordStatusElement: HTMLElement;
+
+  beforeEach(() => {
+    const { validationSpy, authenticationSpy } = makeSut();
+
+    render(
+      <Login validation={validationSpy} authentication={authenticationSpy} />
+    );
+
+    validation = validationSpy;
+    authentication = authenticationSpy;
+
+    errorWrap = screen.getByRole("contentinfo", { name: /error wrap/i });
+    submitButton = screen.getByRole("button", { name: /entrar/i });
+    spinner = screen.queryByRole("status", { name: /spinner loading/i });
+
+    emailElement = screen.getByTestId("email");
+    emailStatusElement = screen.getByTestId("email-status");
+
+    passwordElement = screen.getByTestId("password");
+    passwordStatusElement = screen.getByTestId("password-status");
+  });
+
   it("Should render form status empty on start ", () => {
-    const { validationSpy } = makeSut();
-
-    render(<Login validation={validationSpy} />);
-
-    const errorWrap = screen.getByRole("contentinfo", {
-      name: /error wrap/i,
-    });
-
     expect(errorWrap.childElementCount).toBe(0);
   });
 
-  it("Should start login with button disabled", () => {
-    const { validationSpy } = makeSut();
-
-    validationSpy.errorMessage = faker.random.words();
-
-    render(<Login validation={validationSpy} />);
-
-    const submitButton = screen.getByRole("button", {
-      name: /entrar/i,
-    });
-
-    expect(submitButton).toBeDisabled();
-  });
-
   it("Should call Validation with correct email", () => {
-    const { validationSpy } = makeSut();
-
-    render(<Login validation={validationSpy} />);
-
-    const emailElement = screen.getByTestId("email");
-
     const email = faker.internet.email();
 
     userEvent.type(emailElement, email);
 
-    expect(validationSpy.fieldName).toBe("email");
-    expect(validationSpy.fieldValue).toBe(email);
+    expect(validation.fieldName).toBe("email");
+    expect(validation.fieldValue).toBe(email);
   });
 
   it("Should call Validation with correct password", () => {
-    const { validationSpy } = makeSut();
-
-    render(<Login validation={validationSpy} />);
-
-    const passwordElement = screen.getByTestId("password");
-
     const password = faker.internet.password();
 
     userEvent.type(passwordElement, password);
 
-    expect(validationSpy.fieldName).toBe("password");
-    expect(validationSpy.fieldValue).toBe(password);
-  });
-
-  it("Should show email message error if Validation fails", () => {
-    const { validationSpy } = makeSut();
-
-    const errorMessage = faker.random.words();
-
-    validationSpy.errorMessage = errorMessage;
-
-    render(<Login validation={validationSpy} />);
-
-    const emailElement = screen.getByTestId("email");
-    const emailStatusElement = screen.getByTestId("email-status");
-
-    userEvent.type(emailElement, faker.internet.email());
-
-    expect(emailStatusElement.title).toBe(errorMessage);
-    expect(emailStatusElement.classList).toContain("statusError");
-  });
-
-  it("Should show password message error if Validation fails", () => {
-    const { validationSpy } = makeSut();
-
-    const errorMessage = faker.random.words();
-
-    validationSpy.errorMessage = errorMessage;
-
-    render(<Login validation={validationSpy} />);
-
-    const passwordElement = screen.getByTestId("password");
-    const passwordStatusElement = screen.getByTestId("password-status");
-
-    userEvent.type(passwordElement, faker.internet.password());
-
-    expect(passwordStatusElement.title).toBe(errorMessage);
-    expect(passwordStatusElement.classList).toContain("statusError");
+    expect(validation.fieldName).toBe("password");
+    expect(validation.fieldValue).toBe(password);
   });
 
   it("Should not show email message error if Validation is valid", () => {
-    const { validationSpy } = makeSut();
-
-    render(<Login validation={validationSpy} />);
-
-    const emailElement = screen.getByTestId("email");
-    const emailStatusElement = screen.getByTestId("email-status");
-
     userEvent.type(emailElement, faker.internet.email());
 
     expect(emailStatusElement.title).not.toBe(faker.random.words());
@@ -129,13 +103,6 @@ describe("Login component", () => {
   });
 
   it("Should not show password message error if Validation is valid", () => {
-    const { validationSpy } = makeSut();
-
-    render(<Login validation={validationSpy} />);
-
-    const passwordElement = screen.getByTestId("password");
-    const passwordStatusElement = screen.getByTestId("password-status");
-
     userEvent.type(passwordElement, faker.internet.password());
 
     expect(passwordStatusElement.title).not.toBe(faker.random.words());
@@ -143,17 +110,6 @@ describe("Login component", () => {
   });
 
   it("Should enable submit button if form is valid", () => {
-    const { validationSpy } = makeSut();
-
-    render(<Login validation={validationSpy} />);
-
-    const emailElement = screen.getByTestId("email");
-    const passwordElement = screen.getByTestId("password");
-
-    const submitButton = screen.getByRole("button", {
-      name: /entrar/i,
-    });
-
     userEvent.type(passwordElement, faker.internet.password());
     userEvent.type(emailElement, faker.internet.email());
 
@@ -161,25 +117,77 @@ describe("Login component", () => {
   });
 
   it("Should show spinner on submit", () => {
-    const { validationSpy } = makeSut();
-
-    render(<Login validation={validationSpy} />);
-
-    const emailElement = screen.getByTestId("email");
-    const passwordElement = screen.getByTestId("password");
-
-    const submitButton = screen.getByRole("button", {
-      name: /entrar/i,
-    });
-
     userEvent.type(passwordElement, faker.internet.password());
     userEvent.type(emailElement, faker.internet.email());
     userEvent.click(submitButton);
 
-    const spinner = screen.queryByRole("status", {
-      name: /spinner loading/i,
-    });
+    spinner = screen.queryByRole("status", { name: /spinner loading/i });
 
     expect(spinner).toBeInTheDocument();
+  });
+
+  it("Should call Authentication with correct values", () => {
+    const email = faker.internet.email();
+    const password = faker.internet.password();
+
+    userEvent.type(emailElement, email);
+    userEvent.type(passwordElement, password);
+
+    userEvent.click(submitButton);
+
+    expect(authentication.params).toEqual({
+      email,
+      password,
+    });
+  });
+});
+
+describe("Login component With validationError", () => {
+  let validation: ValidationSpy;
+
+  let submitButton: HTMLElement;
+
+  let emailElement: HTMLInputElement;
+  let emailStatusElement: HTMLElement;
+
+  let passwordElement: HTMLInputElement;
+  let passwordStatusElement: HTMLElement;
+
+  beforeEach(() => {
+    const { validationSpy, authenticationSpy } = makeSut();
+
+    validationSpy.errorMessage = faker.random.words();
+
+    render(
+      <Login validation={validationSpy} authentication={authenticationSpy} />
+    );
+
+    validation = validationSpy;
+
+    submitButton = screen.getByRole("button", { name: /entrar/i });
+
+    emailElement = screen.getByTestId("email");
+    emailStatusElement = screen.getByTestId("email-status");
+
+    passwordElement = screen.getByTestId("password");
+    passwordStatusElement = screen.getByTestId("password-status");
+  });
+
+  it("Should start login with button disabled", () => {
+    expect(submitButton).toBeDisabled();
+  });
+
+  it("Should show email message error if Validation fails", () => {
+    userEvent.type(emailElement, faker.internet.email());
+
+    expect(emailStatusElement.title).toBe(validation.errorMessage);
+    expect(emailStatusElement.classList).toContain("statusError");
+  });
+
+  it("Should show password message error if Validation fails", () => {
+    userEvent.type(passwordElement, faker.internet.password());
+
+    expect(passwordStatusElement.title).toBe(validation.errorMessage);
+    expect(passwordStatusElement.classList).toContain("statusError");
   });
 });
