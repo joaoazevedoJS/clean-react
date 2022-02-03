@@ -13,12 +13,15 @@ import {
 } from "@/presentation/contexts/form/form-context";
 
 import { Validation } from "@/presentation/protocols/validation";
+import { InputOnChangeEvent } from "@/presentation/components/input/input";
+
+import { Authentication } from "@/domain/usecases";
 
 import Styles from "./login-styles.module.scss";
-import { InputOnChangeEvent } from "@/presentation/components/input/input";
 
 type Props = {
   validation: Validation;
+  authentication: Authentication;
 };
 
 type ErrorStatusProps = {
@@ -26,7 +29,7 @@ type ErrorStatusProps = {
   password: string;
 };
 
-const Login: FC<Props> = ({ validation }) => {
+const Login: FC<Props> = ({ validation, authentication }) => {
   const [state, setState] = useState<FormContextProps>({
     isLoading: false,
     errorMessage: "",
@@ -60,14 +63,19 @@ const Login: FC<Props> = ({ validation }) => {
   );
 
   const handleSubmit = useCallback(
-    (event: FormEvent) => {
+    async (event: FormEvent) => {
       event.preventDefault();
 
       if (hasErrorInForm) return;
 
       setState((oldState) => ({ ...oldState, isLoading: true }));
+
+      await authentication.auth({
+        email: state.email,
+        password: state.password,
+      });
     },
-    [hasErrorInForm]
+    [authentication, hasErrorInForm, state.email, state.password]
   );
 
   return (
