@@ -4,24 +4,9 @@ import userEvent from "@testing-library/user-event";
 
 import faker from "@faker-js/faker";
 
-import { ValidationSpy } from "@/presentation/test";
-import { Authentication, AuthenticationParams } from "@/domain/usecases";
-import { AccountModel } from "@/domain/models";
-import { mockAccountModel } from "@/domain/mock";
+import { AuthenticationSpy, ValidationSpy } from "@/presentation/test";
 
 import Login from "./login";
-
-class AuthenticationSpy implements Authentication {
-  private account = mockAccountModel();
-
-  public params: AuthenticationParams;
-
-  async auth(params: AuthenticationParams): Promise<AccountModel> {
-    this.params = params;
-
-    return Promise.resolve(this.account);
-  }
-}
 
 type SutTypes = {
   validationSpy: ValidationSpy;
