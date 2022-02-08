@@ -66,7 +66,7 @@ const Login: FC<Props> = ({ validation, authentication }) => {
     async (event: FormEvent) => {
       event.preventDefault();
 
-      if (hasErrorInForm) return;
+      if (hasErrorInForm || state.isLoading) return;
 
       setState((oldState) => ({ ...oldState, isLoading: true }));
 
@@ -75,7 +75,13 @@ const Login: FC<Props> = ({ validation, authentication }) => {
         password: state.password,
       });
     },
-    [authentication, hasErrorInForm, state.email, state.password]
+    [
+      authentication,
+      hasErrorInForm,
+      state.email,
+      state.isLoading,
+      state.password,
+    ]
   );
 
   return (
