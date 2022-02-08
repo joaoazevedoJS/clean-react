@@ -1,10 +1,11 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import faker from "@faker-js/faker";
 
 import { AuthenticationSpy, ValidationSpy } from "@/presentation/test";
+import { InvalidCredentialsError } from "@/domain/errors";
 
 import Login from "./login";
 
@@ -163,6 +164,23 @@ describe("Login component", () => {
 
     expect(authentication.callsCount).toBe(1);
   });
+
+  it("Should presebt error if Authentication fails", async () => {
+    const error = new InvalidCredentialsError();
+
+    jest
+      .spyOn(authentication, "auth")
+      .mockReturnValueOnce(Promise.reject(error));
+
+    const { spinner } = useForm(true);
+
+    await waitFor(() => authentication.callsCount);
+
+    const mainError = screen.queryByRole("alert", { name: /error message/i });
+
+    expect(spinner).not.toBeInTheDocument();
+    expect(mainError.textContent).toBe(error.message);
+  });
 });
 
 describe("Login component With validationError", () => {
@@ -201,8 +219,6 @@ describe("Login component With validationError", () => {
   });
 
   it("Should not call Authentication if is invalid", () => {
-    useEmailElement();
-
     useForm(true);
 
     expect(authentication.callsCount).toBe(0);
