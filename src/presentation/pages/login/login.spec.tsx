@@ -167,6 +167,7 @@ describe("Login component", () => {
 
 describe("Login component With validationError", () => {
   let validation: ValidationSpy;
+  let authentication: AuthenticationSpy;
 
   beforeEach(() => {
     const { validationSpy, authenticationSpy } = makeSut(faker.random.words());
@@ -176,6 +177,7 @@ describe("Login component With validationError", () => {
     );
 
     validation = validationSpy;
+    authentication = authenticationSpy;
   });
 
   it("Should start login with button disabled", () => {
@@ -196,5 +198,13 @@ describe("Login component With validationError", () => {
 
     expect(passwordStatusElement.title).toBe(validation.errorMessage);
     expect(passwordStatusElement.classList).toContain("statusError");
+  });
+
+  it("Should not call Authentication if is invalid", () => {
+    useEmailElement();
+
+    useForm(true);
+
+    expect(authentication.callsCount).toBe(0);
   });
 });
