@@ -153,6 +153,16 @@ describe("Login component", () => {
       password,
     });
   });
+
+  it("Should call Authentication only once", () => {
+    useEmailElement();
+    usePasswordElement();
+
+    useForm(true);
+    useForm(true);
+
+    expect(authentication.callsCount).toBe(1);
+  });
 });
 
 describe("Login component With validationError", () => {
