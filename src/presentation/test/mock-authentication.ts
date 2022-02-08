@@ -9,7 +9,7 @@ export class AuthenticationSpy implements Authentication {
 
   public callsCount = 0;
 
-  async auth(params: AuthenticationParams): Promise<AccountModel> {
+  public async auth(params: AuthenticationParams): Promise<AccountModel> {
     this.params = params;
 
     this.callsCount += 1;

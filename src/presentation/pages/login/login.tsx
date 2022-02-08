@@ -18,6 +18,7 @@ import { InputOnChangeEvent } from "@/presentation/components/input/input";
 import { Authentication } from "@/domain/usecases";
 
 import Styles from "./login-styles.module.scss";
+import { InvalidCredentialsError } from "@/domain/errors";
 
 type Props = {
   validation: Validation;
@@ -68,12 +69,23 @@ const Login: FC<Props> = ({ validation, authentication }) => {
 
       if (hasErrorInForm || state.isLoading) return;
 
-      setState((oldState) => ({ ...oldState, isLoading: true }));
+      try {
+        setState((oldState) => ({ ...oldState, isLoading: true }));
 
-      await authentication.auth({
-        email: state.email,
-        password: state.password,
-      });
+        await authentication.auth({
+          email: state.email,
+          password: state.password,
+        });
+      } catch (error) {
+        setState((oldState) => ({
+          ...oldState,
+          isLoading: false,
+          errorMessage:
+            error instanceof InvalidCredentialsError
+              ? error.message
+              : "Problema Interno",
+        }));
+      }
     },
     [
       authentication,
