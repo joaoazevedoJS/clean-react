@@ -3,7 +3,7 @@ import { AccountModel } from "@/domain/models";
 import { mockAccountModel } from "@/domain/mock";
 
 export class AuthenticationSpy implements Authentication {
-  private account = mockAccountModel();
+  public account = mockAccountModel();
 
   public params: AuthenticationParams;
 

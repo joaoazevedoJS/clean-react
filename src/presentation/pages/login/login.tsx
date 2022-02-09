@@ -72,10 +72,12 @@ const Login: FC<Props> = ({ validation, authentication }) => {
       try {
         setState((oldState) => ({ ...oldState, isLoading: true }));
 
-        await authentication.auth({
+        const account = await authentication.auth({
           email: state.email,
           password: state.password,
         });
+
+        localStorage.setItem("accessToken", account.accessToken);
       } catch (error) {
         setState((oldState) => ({
           ...oldState,
@@ -101,7 +103,11 @@ const Login: FC<Props> = ({ validation, authentication }) => {
       <FormContext.Provider value={state}>
         <LoginHeader />
 
-        <form className={Styles.form} onSubmit={handleSubmit}>
+        <form
+          className={Styles.form}
+          onSubmit={handleSubmit}
+          data-testid="form"
+        >
           <h2>Login</h2>
 
           <Input
