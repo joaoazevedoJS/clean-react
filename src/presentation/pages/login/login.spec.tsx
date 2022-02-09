@@ -1,4 +1,6 @@
 import React from "react";
+
+import "jest-localstorage-mock";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
@@ -17,6 +19,8 @@ type SutTypes = {
 const makeSut = (validationError?: string): SutTypes => {
   const validationSpy = new ValidationSpy();
   const authenticationSpy = new AuthenticationSpy();
+
+  localStorage.clear();
 
   if (validationError) {
     validationSpy.errorMessage = validationError;
@@ -165,7 +169,7 @@ describe("Login component", () => {
     expect(authentication.callsCount).toBe(1);
   });
 
-  it("Should presebt error if Authentication fails", async () => {
+  it("Should present error if Authentication fails", async () => {
     const error = new InvalidCredentialsError();
 
     jest
@@ -180,6 +184,19 @@ describe("Login component", () => {
 
     expect(spinner).not.toBeInTheDocument();
     expect(mainError.textContent).toBe(error.message);
+  });
+
+  it("Should add accessToken to localstorage on sucess", async () => {
+    useEmailElement();
+    usePasswordElement();
+    useForm(true);
+
+    await waitFor(() => authentication.callsCount);
+
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      "accessToken",
+      authentication.account.accessToken
+    );
   });
 });
 
