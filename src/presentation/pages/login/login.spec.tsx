@@ -1,4 +1,6 @@
 import React from "react";
+import { Router } from "react-router-dom";
+import { createMemoryHistory } from "history";
 
 import "jest-localstorage-mock";
 import { render, screen, waitFor } from "@testing-library/react";
@@ -73,6 +75,8 @@ const useForm = (submit = false) => {
   };
 };
 
+const history = createMemoryHistory();
+
 describe("Login component", () => {
   let validation: ValidationSpy;
   let authentication: AuthenticationSpy;
@@ -81,7 +85,9 @@ describe("Login component", () => {
     const { validationSpy, authenticationSpy } = makeSut();
 
     render(
-      <Login validation={validationSpy} authentication={authenticationSpy} />
+      <Router history={history}>
+        <Login validation={validationSpy} authentication={authenticationSpy} />
+      </Router>
     );
 
     validation = validationSpy;
@@ -192,11 +198,19 @@ describe("Login component", () => {
     useForm(true);
 
     await waitFor(() => authentication.callsCount);
-
     expect(localStorage.setItem).toHaveBeenCalledWith(
       "accessToken",
       authentication.account.accessToken
     );
+  });
+
+  it("Should go to signup page", () => {
+    const registerLink = screen.getByRole("link", { name: /registe account/i });
+
+    userEvent.click(registerLink);
+
+    expect(history.length).toBe(2);
+    expect(history.location.pathname).toBe("/signup");
   });
 });
 
@@ -208,7 +222,9 @@ describe("Login component With validationError", () => {
     const { validationSpy, authenticationSpy } = makeSut(faker.random.words());
 
     render(
-      <Login validation={validationSpy} authentication={authenticationSpy} />
+      <Router history={history}>
+        <Login validation={validationSpy} authentication={authenticationSpy} />
+      </Router>
     );
 
     validation = validationSpy;
