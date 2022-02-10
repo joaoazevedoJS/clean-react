@@ -1,5 +1,7 @@
 import React, { FC, FormEvent, useCallback, useMemo, useState } from "react";
 
+import { Link } from "react-router-dom";
+
 import {
   Footer,
   FormStatus,
@@ -136,7 +138,13 @@ const Login: FC<Props> = ({ validation, authentication }) => {
             Entrar
           </button>
 
-          <span className={Styles.link}>Criar conta</span>
+          <Link
+            to="/signup"
+            className={Styles.link}
+            aria-label="registe account"
+          >
+            Criar conta
+          </Link>
 
           <FormStatus />
         </form>
