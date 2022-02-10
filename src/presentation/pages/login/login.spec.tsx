@@ -75,7 +75,7 @@ const useForm = (submit = false) => {
   };
 };
 
-const history = createMemoryHistory();
+const history = createMemoryHistory({ initialEntries: ["/login"] });
 
 describe("Login component", () => {
   let validation: ValidationSpy;
@@ -198,10 +198,14 @@ describe("Login component", () => {
     useForm(true);
 
     await waitFor(() => authentication.callsCount);
+
     expect(localStorage.setItem).toHaveBeenCalledWith(
       "accessToken",
       authentication.account.accessToken
     );
+
+    expect(history.length).toBe(1);
+    expect(history.location.pathname).toBe("/");
   });
 
   it("Should go to signup page", () => {
