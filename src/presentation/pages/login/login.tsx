@@ -1,6 +1,6 @@
 import React, { FC, FormEvent, useCallback, useMemo, useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import {
   Footer,
@@ -33,6 +33,8 @@ type ErrorStatusProps = {
 };
 
 const Login: FC<Props> = ({ validation, authentication }) => {
+  const history = useHistory();
+
   const [state, setState] = useState<FormContextProps>({
     isLoading: false,
     errorMessage: "",
@@ -80,6 +82,8 @@ const Login: FC<Props> = ({ validation, authentication }) => {
         });
 
         localStorage.setItem("accessToken", account.accessToken);
+
+        history.replace("/");
       } catch (error) {
         setState((oldState) => ({
           ...oldState,
