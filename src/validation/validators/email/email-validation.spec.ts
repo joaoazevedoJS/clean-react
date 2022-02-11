@@ -10,7 +10,7 @@ type ISut = {
 };
 
 const makeSUT = (): ISut => {
-  const emailValidation = new EmailValidation("email");
+  const emailValidation = new EmailValidation(faker.database.column());
 
   return {
     emailValidation,
