@@ -22,7 +22,7 @@ describe("MinLengthValidation", () => {
   test("should return error if value is invalid", () => {
     const { minLengthValidation } = makeSUT(5);
 
-    const error = minLengthValidation.validate("abc");
+    const error = minLengthValidation.validate(faker.random.alphaNumeric(2));
 
     expect(error).toBeInstanceOf(InvalidFieldError);
   });
@@ -30,7 +30,7 @@ describe("MinLengthValidation", () => {
   test("should return falsy if value is valid", () => {
     const { minLengthValidation } = makeSUT(5);
 
-    const error = minLengthValidation.validate(" abcde");
+    const error = minLengthValidation.validate(faker.random.alphaNumeric(5));
 
     expect(error).toBeFalsy();
   });
