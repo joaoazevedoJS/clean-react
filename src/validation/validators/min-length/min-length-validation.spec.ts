@@ -26,4 +26,12 @@ describe("MinLengthValidation", () => {
 
     expect(error).toBeInstanceOf(InvalidFieldError);
   });
+
+  test("should return falsy if value is valid", () => {
+    const { minLengthValidation } = makeSUT(5);
+
+    const error = minLengthValidation.validate(" abcde");
+
+    expect(error).toBeFalsy();
+  });
 });
