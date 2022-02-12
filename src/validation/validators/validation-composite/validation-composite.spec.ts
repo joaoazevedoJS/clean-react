@@ -17,7 +17,7 @@ const makeSUT = (field: string): ISut => {
 
   const fieldValidationsSpy = [fieldValidationSpy, fieldValidationSpy2];
 
-  const validationComposite = new ValidationComposite(fieldValidationsSpy);
+  const validationComposite = ValidationComposite.build(fieldValidationsSpy);
 
   return {
     validationComposite,
