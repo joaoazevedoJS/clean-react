@@ -10,13 +10,20 @@ import { ValidationComposite } from "./validation-composite";
 
 type ISut = {
   validationComposite: ValidationComposite;
+  fieldValidationsSpy: FieldValidationSpy[];
 };
 
-const makeSUT = (validators: FieldValidation[]): ISut => {
-  const validationComposite = new ValidationComposite(validators);
+const makeSUT = (field: string): ISut => {
+  const fieldValidationSpy = new FieldValidationSpy(field);
+  const fieldValidationSpy2 = new FieldValidationSpy(field);
+
+  const fieldValidationsSpy = [fieldValidationSpy, fieldValidationSpy2];
+
+  const validationComposite = new ValidationComposite(fieldValidationsSpy);
 
   return {
     validationComposite,
+    fieldValidationsSpy,
   };
 };
 
@@ -25,16 +32,10 @@ describe("ValidationComposite", () => {
     const field = faker.database.column();
     const errorMessage = faker.random.words();
 
-    const fieldValidationSpy = new FieldValidationSpy(field);
-    const fieldValidationSpy2 = new FieldValidationSpy(field);
+    const { validationComposite, fieldValidationsSpy } = makeSUT(field);
 
-    fieldValidationSpy.error = new Error(errorMessage);
-    fieldValidationSpy2.error = new Error(faker.random.words());
-
-    const { validationComposite } = makeSUT([
-      fieldValidationSpy,
-      fieldValidationSpy2,
-    ]);
+    fieldValidationsSpy[0].error = new Error(errorMessage);
+    fieldValidationsSpy[1].error = new Error(faker.random.words());
 
     const error = validationComposite.validate({
       fieldName: field,
