@@ -44,4 +44,17 @@ describe("ValidationComposite", () => {
 
     expect(error).toBe(errorMessage);
   });
+
+  test("Should not return error if all validation is valid", () => {
+    const field = faker.database.column();
+
+    const { validationComposite } = makeSUT(field);
+
+    const error = validationComposite.validate({
+      fieldName: field,
+      fieldValue: faker.random.word(),
+    });
+
+    expect(error).toBeFalsy();
+  });
 });
