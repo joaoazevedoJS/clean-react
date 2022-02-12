@@ -2,7 +2,7 @@ import "reflect-metadata";
 
 import faker from "@faker-js/faker";
 
-import { RequiredFieldValidation } from "./required-field-validation";
+import { RequiredFieldValidation } from "@/validation/validators";
 
 import { RequiredFieldError } from "@/validation/errors";
 

@@ -2,11 +2,9 @@ import "reflect-metadata";
 
 import faker from "@faker-js/faker";
 
-import { FieldValidation } from "@/validation/protocols/field-validation";
-
 import { FieldValidationSpy } from "@/validation/validators/test/mock-field-validation";
 
-import { ValidationComposite } from "./validation-composite";
+import { ValidationComposite } from "@/validation/validators";
 
 type ISut = {
   validationComposite: ValidationComposite;

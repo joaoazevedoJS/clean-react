@@ -3,7 +3,8 @@ import "reflect-metadata";
 import faker from "@faker-js/faker";
 
 import { InvalidFieldError } from "@/validation/errors";
-import { MinLengthValidation } from "./min-length-validation";
+
+import { MinLengthValidation } from "@/validation/validators";
 
 type ISut = {
   minLengthValidation: MinLengthValidation;
