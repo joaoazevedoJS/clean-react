@@ -37,6 +37,7 @@
     "camelcase": "off",
     "prettier/prettier": "error",
     "no-use-before-define": "off",
+    "no-restricted-syntax": "off",
     "class-methods-use-this": "off",
     "no-useless-constructor": "off",
     "jsx-a11y/label-has-associated-control": "off",
