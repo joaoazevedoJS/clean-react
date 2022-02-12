@@ -3,7 +3,6 @@
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -25,16 +24,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(j|t)sx$/,
+        test: /\.ts(x?)$/,
+        loader: "ts-loader",
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            plugins: [
-              isDevelopment && require.resolve("react-refresh/babel"),
-            ].filter(Boolean),
-          },
-        },
       },
       {
         test: /\.scss$/,
@@ -85,7 +77,6 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    isDevelopment && new ReactRefreshWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "public", "index.html"),
     }),
