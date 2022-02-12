@@ -33,4 +33,12 @@ describe("EmailValidation", () => {
 
     expect(error).toBeFalsy();
   });
+
+  test("Should return falsy if email is empty", () => {
+    const { emailValidation } = makeSUT();
+
+    const error = emailValidation.validate(" ");
+
+    expect(error).toBeFalsy();
+  });
 });
