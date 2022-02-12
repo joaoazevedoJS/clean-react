@@ -4,9 +4,9 @@ import faker from "@faker-js/faker";
 
 import { FieldValidation } from "@/validation/protocols/field-validation";
 
-import { ValidationComposite } from "./validation-composite";
-
 import { FieldValidationSpy } from "@/validation/validators/test/mock-field-validation";
+
+import { ValidationComposite } from "./validation-composite";
 
 type ISut = {
   validationComposite: ValidationComposite;
@@ -28,7 +28,8 @@ describe("ValidationComposite", () => {
     const fieldValidationSpy = new FieldValidationSpy(field);
     const fieldValidationSpy2 = new FieldValidationSpy(field);
 
-    fieldValidationSpy2.error = new Error(errorMessage);
+    fieldValidationSpy.error = new Error(errorMessage);
+    fieldValidationSpy2.error = new Error(faker.random.words());
 
     const { validationComposite } = makeSUT([
       fieldValidationSpy,
