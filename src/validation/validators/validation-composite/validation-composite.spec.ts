@@ -2,7 +2,7 @@ import "reflect-metadata";
 
 import faker from "@faker-js/faker";
 
-import { FieldValidationSpy } from "@/validation/validators/test/mock-field-validation";
+import { FieldValidationSpy } from "@/validation/test";
 
 import { ValidationComposite } from "@/validation/validators";
 
