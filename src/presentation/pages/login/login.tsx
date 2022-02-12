@@ -20,7 +20,6 @@ import { InputOnChangeEvent } from "@/presentation/components/input/input";
 import { Authentication } from "@/domain/usecases";
 
 import Styles from "./login-styles.module.scss";
-import { InvalidCredentialsError } from "@/domain/errors";
 
 type Props = {
   validation: Validation;
@@ -89,15 +88,14 @@ const Login: FC<Props> = ({ validation, authentication }) => {
           ...oldState,
           isLoading: false,
           errorMessage:
-            error instanceof InvalidCredentialsError
-              ? error.message
-              : "Problema Interno",
+            error instanceof Error ? error.message : "Problema Interno",
         }));
       }
     },
     [
       authentication,
       hasErrorInForm,
+      history,
       state.email,
       state.isLoading,
       state.password,
