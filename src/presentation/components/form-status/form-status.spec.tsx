@@ -1,5 +1,5 @@
 import React from "react";
-import { mocked } from "ts-jest/utils";
+
 import { render, screen } from "@testing-library/react";
 
 import {
@@ -15,7 +15,7 @@ function useFormContextMocked({
   isLoading,
   errorMessage,
 }: FormContextPropsMocked) {
-  const contextMocked = mocked(useFormContext);
+  const contextMocked = jest.mocked(useFormContext);
 
   contextMocked.mockReturnValueOnce({
     isLoading: !!isLoading,

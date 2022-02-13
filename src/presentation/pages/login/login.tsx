@@ -1,6 +1,6 @@
 import React, { FC, FormEvent, useCallback, useMemo, useState } from "react";
 
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   Footer,
@@ -32,7 +32,7 @@ type ErrorStatusProps = {
 };
 
 const Login: FC<Props> = ({ validation, authentication }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [state, setState] = useState<FormContextProps>({
     isLoading: false,
@@ -82,7 +82,7 @@ const Login: FC<Props> = ({ validation, authentication }) => {
 
         localStorage.setItem("accessToken", account.accessToken);
 
-        history.replace("/");
+        navigate("/");
       } catch (error) {
         const err = error as Error;
 
@@ -96,7 +96,7 @@ const Login: FC<Props> = ({ validation, authentication }) => {
     [
       authentication,
       hasErrorInForm,
-      history,
+      navigate,
       state.email,
       state.isLoading,
       state.password,

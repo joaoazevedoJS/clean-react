@@ -6,7 +6,7 @@ import { makeRemoteAuthentication } from "@/main/factories/usecases/Authenticati
 
 import { MakeLoginValidation } from "./login-validation-factory";
 
-export const MakeLogin: FC = () => {
+const MakeLogin: FC = () => {
   const remoteAuthentication = useMemo(() => makeRemoteAuthentication(), []);
   const validationComposite = useMemo(() => MakeLoginValidation(), []);
 
@@ -17,3 +17,5 @@ export const MakeLogin: FC = () => {
     />
   );
 };
+
+export { MakeLogin };

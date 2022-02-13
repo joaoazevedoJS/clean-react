@@ -3,5 +3,5 @@ export const makeAPIUrl = (path: string): string => {
 
   if (url[0] === "/") url.shift();
 
-  return `process.env.API_URL/${url.join("")}`;
+  return `${process.env.API_URL}/${url.join("")}`;
 };

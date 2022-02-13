@@ -1,18 +1,18 @@
 import React, { FC } from "react";
 
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import "@/presentation/styles/global.scss";
 
-type Props = {
-  MakeLogin: FC;
-};
+import { MakeLogin } from "@/main/factories/pages/login/login-factory";
+import { NotFound } from "@/presentation/pages";
 
-const Router: FC<Props> = ({ MakeLogin }) => (
+const Router: FC = () => (
   <BrowserRouter>
-    <Switch>
-      <Route path="/login" exact component={MakeLogin} />
-    </Switch>
+    <Routes>
+      <Route path="/login" element={<MakeLogin />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   </BrowserRouter>
 );
 

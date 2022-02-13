@@ -2,9 +2,9 @@ import React from "react";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 
-import "jest-localstorage-mock";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import "jest-localstorage-mock";
 
 import faker from "@faker-js/faker";
 
@@ -27,6 +27,12 @@ const makeSut = (validationError?: string): SutTypes => {
   if (validationError) {
     validationSpy.errorMessage = validationError;
   }
+
+  render(
+    <Router navigator={history} location={history.location}>
+      <Login validation={validationSpy} authentication={authenticationSpy} />
+    </Router>
+  );
 
   return {
     validationSpy,
@@ -78,47 +84,39 @@ const useForm = (submit = false) => {
 const history = createMemoryHistory({ initialEntries: ["/login"] });
 
 describe("Login component", () => {
-  let validation: ValidationSpy;
-  let authentication: AuthenticationSpy;
-
-  beforeEach(() => {
-    const { validationSpy, authenticationSpy } = makeSut();
-
-    render(
-      <Router history={history}>
-        <Login validation={validationSpy} authentication={authenticationSpy} />
-      </Router>
-    );
-
-    validation = validationSpy;
-    authentication = authenticationSpy;
-  });
-
   it("Should render form status empty on start ", () => {
+    makeSut();
+
     const { errorWrap } = useForm();
 
     expect(errorWrap.childElementCount).toBe(0);
   });
 
   it("Should call Validation with correct email", () => {
+    const { validationSpy } = makeSut();
+
     const email = faker.internet.email();
 
     useEmailElement(email);
 
-    expect(validation.fieldName).toBe("email");
-    expect(validation.fieldValue).toBe(email);
+    expect(validationSpy.fieldName).toBe("email");
+    expect(validationSpy.fieldValue).toBe(email);
   });
 
   it("Should call Validation with correct password", () => {
+    const { validationSpy } = makeSut();
+
     const password = faker.internet.password();
 
     usePasswordElement(password);
 
-    expect(validation.fieldName).toBe("password");
-    expect(validation.fieldValue).toBe(password);
+    expect(validationSpy.fieldName).toBe("password");
+    expect(validationSpy.fieldValue).toBe(password);
   });
 
   it("Should not show email message error if Validation is valid", () => {
+    makeSut();
+
     const { emailStatusElement } = useEmailElement();
 
     expect(emailStatusElement.title).not.toBe(faker.random.words());
@@ -126,6 +124,8 @@ describe("Login component", () => {
   });
 
   it("Should not show password message error if Validation is valid", () => {
+    makeSut();
+
     const { passwordStatusElement } = usePasswordElement();
 
     expect(passwordStatusElement.title).not.toBe(faker.random.words());
@@ -133,6 +133,8 @@ describe("Login component", () => {
   });
 
   it("Should enable submit button if form is valid", () => {
+    makeSut();
+
     const { submitButton } = useForm();
 
     usePasswordElement();
@@ -142,6 +144,7 @@ describe("Login component", () => {
   });
 
   it("Should show spinner on submit", () => {
+    makeSut();
     usePasswordElement();
     useEmailElement();
 
@@ -151,6 +154,7 @@ describe("Login component", () => {
   });
 
   it("Should call Authentication with correct values", () => {
+    const { authenticationSpy } = makeSut();
     const email = faker.internet.email();
     const password = faker.internet.password();
 
@@ -159,32 +163,69 @@ describe("Login component", () => {
 
     useForm(true);
 
-    expect(authentication.params).toEqual({
+    expect(authenticationSpy.params).toEqual({
       email,
       password,
     });
   });
 
+  it("Should start login with button disabled", () => {
+    makeSut(faker.random.words());
+
+    const { submitButton } = useForm();
+
+    expect(submitButton).toBeDisabled();
+  });
+
+  it("Should show email message error if Validation fails", () => {
+    const { validationSpy } = makeSut(faker.random.words());
+    const { emailStatusElement } = useEmailElement();
+
+    expect(emailStatusElement.title).toBe(validationSpy.errorMessage);
+    expect(emailStatusElement.classList).toContain("statusError");
+  });
+
+  it("Should show password message error if Validation fails", () => {
+    const { validationSpy } = makeSut(faker.random.words());
+
+    const { passwordStatusElement } = usePasswordElement();
+
+    expect(passwordStatusElement.title).toBe(validationSpy.errorMessage);
+    expect(passwordStatusElement.classList).toContain("statusError");
+  });
+
+  it("Should not call Authentication if is invalid", () => {
+    const { authenticationSpy } = makeSut(faker.random.words());
+
+    useForm(true);
+
+    expect(authenticationSpy.callsCount).toBe(0);
+  });
+
   it("Should call Authentication only once", () => {
+    const { authenticationSpy } = makeSut();
+
     useEmailElement();
     usePasswordElement();
 
     useForm(true);
     useForm(true);
 
-    expect(authentication.callsCount).toBe(1);
+    expect(authenticationSpy.callsCount).toBe(1);
   });
 
   it("Should present error if Authentication fails", async () => {
+    const { authenticationSpy } = makeSut();
+
     const error = new InvalidCredentialsError();
 
     jest
-      .spyOn(authentication, "auth")
+      .spyOn(authenticationSpy, "auth")
       .mockReturnValueOnce(Promise.reject(error));
 
     const { spinner } = useForm(true);
 
-    await waitFor(() => authentication.callsCount);
+    await waitFor(() => authenticationSpy.callsCount);
 
     const mainError = screen.queryByRole("alert", { name: /error message/i });
 
@@ -193,71 +234,29 @@ describe("Login component", () => {
   });
 
   it("Should add accessToken to localstorage on sucess", async () => {
+    const { authenticationSpy } = makeSut();
+
     useEmailElement();
     usePasswordElement();
     useForm(true);
 
-    await waitFor(() => authentication.callsCount);
+    await waitFor(() => authenticationSpy.callsCount);
 
     expect(localStorage.setItem).toHaveBeenCalledWith(
       "accessToken",
-      authentication.account.accessToken
+      authenticationSpy.account.accessToken
     );
 
-    expect(history.length).toBe(1);
     expect(history.location.pathname).toBe("/");
   });
 
   it("Should go to signup page", () => {
+    makeSut();
+
     const registerLink = screen.getByRole("link", { name: /registe account/i });
 
     userEvent.click(registerLink);
 
-    expect(history.length).toBe(2);
     expect(history.location.pathname).toBe("/signup");
-  });
-});
-
-describe("Login component With validationError", () => {
-  let validation: ValidationSpy;
-  let authentication: AuthenticationSpy;
-
-  beforeEach(() => {
-    const { validationSpy, authenticationSpy } = makeSut(faker.random.words());
-
-    render(
-      <Router history={history}>
-        <Login validation={validationSpy} authentication={authenticationSpy} />
-      </Router>
-    );
-
-    validation = validationSpy;
-    authentication = authenticationSpy;
-  });
-
-  it("Should start login with button disabled", () => {
-    const { submitButton } = useForm();
-
-    expect(submitButton).toBeDisabled();
-  });
-
-  it("Should show email message error if Validation fails", () => {
-    const { emailStatusElement } = useEmailElement();
-
-    expect(emailStatusElement.title).toBe(validation.errorMessage);
-    expect(emailStatusElement.classList).toContain("statusError");
-  });
-
-  it("Should show password message error if Validation fails", () => {
-    const { passwordStatusElement } = usePasswordElement();
-
-    expect(passwordStatusElement.title).toBe(validation.errorMessage);
-    expect(passwordStatusElement.classList).toContain("statusError");
-  });
-
-  it("Should not call Authentication if is invalid", () => {
-    useForm(true);
-
-    expect(authentication.callsCount).toBe(0);
   });
 });

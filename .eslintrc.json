@@ -5,7 +5,6 @@
   },
   "extends": [
     "airbnb",
-    "prettier/@typescript-eslint",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
@@ -50,7 +49,7 @@
 
     "testing-library/await-async-query": "error",
     "testing-library/no-await-sync-query": "error",
-    "testing-library/no-debug": "warn",
+    "testing-library/no-debug": "off",
     "testing-library/no-dom-import": "off",
 
     "react/prop-types": "off",
@@ -62,6 +61,12 @@
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "react/require-default-props": "off",
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "arrow-function"
+      }
+    ],
     "react/jsx-filename-extension": [
       1,
       {
