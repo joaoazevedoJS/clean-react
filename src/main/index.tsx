@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import Router from "@/presentation/router/router";
+import Router from "@/main/router/router";
 
 import { MakeLogin } from "@/main/factories/pages/login/login-factory";
 

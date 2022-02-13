@@ -84,11 +84,12 @@ const Login: FC<Props> = ({ validation, authentication }) => {
 
         history.replace("/");
       } catch (error) {
+        const err = error as Error;
+
         setState((oldState) => ({
           ...oldState,
           isLoading: false,
-          errorMessage:
-            error instanceof Error ? error.message : "Problema Interno",
+          errorMessage: err.message,
         }));
       }
     },
