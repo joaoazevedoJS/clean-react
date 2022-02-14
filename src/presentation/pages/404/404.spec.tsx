@@ -2,10 +2,10 @@ import "reflect-metadata";
 
 import { render, screen } from "@testing-library/react";
 
-import faker, { Faker } from "@faker-js/faker";
+import faker from "@faker-js/faker";
 
 import { Route, Router, Routes } from "react-router-dom";
-import { createMemoryHistory, MemoryHistory } from "history";
+import { createMemoryHistory } from "history";
 
 import { NotFound } from "@/presentation/pages";
 
