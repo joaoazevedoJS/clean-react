@@ -1,6 +1,6 @@
 {
   "name": "clean-react",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "ReactJS, Hooks, Recoil, TDD, Clean Architecture, SOLID",
   "main": "index.js",
   "scripts": {
