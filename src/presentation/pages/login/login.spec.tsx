@@ -18,6 +18,8 @@ type SutTypes = {
   authenticationSpy: AuthenticationSpy;
 };
 
+const history = createMemoryHistory({ initialEntries: ["/login"] });
+
 const makeSut = (validationError?: string): SutTypes => {
   const validationSpy = new ValidationSpy();
   const authenticationSpy = new AuthenticationSpy();
@@ -80,8 +82,6 @@ const useForm = (submit = false) => {
     spinner,
   };
 };
-
-const history = createMemoryHistory({ initialEntries: ["/login"] });
 
 describe("Login component", () => {
   it("Should render form status empty on start ", () => {
